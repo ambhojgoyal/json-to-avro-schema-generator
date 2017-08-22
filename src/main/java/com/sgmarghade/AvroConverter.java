@@ -101,6 +101,10 @@ public class AvroConverter {
                     fields.add(mapper.createObjectNode().put(NAME, map.getKey()).put(TYPE, STRING));
                     break;
 
+                case BOOLEAN:
+                    fields.add(mapper.createObjectNode().put(NAME, map.getKey()).put(TYPE, BOOLEAN));
+                    break;
+
                 case ARRAY:
                     final ArrayNode arrayNode = (ArrayNode) nextNode;
                     final JsonNode element = arrayNode.get(0);
