@@ -31,6 +31,7 @@ public class AvroConverter {
     private static final String STRING = "string";
     private static final String RECORD = "record";
     private static final String FIELDS = "fields";
+    private static final String BOOLEAN = "boolean";
 
     private final ObjectMapper mapper;
 
@@ -68,11 +69,11 @@ public class AvroConverter {
      * @return avro schema json
      * @throws IOException
      */
-    public String convert(final String json) throws IOException {
+    public String convert(final String json,final String namespace, final String recordname) throws IOException {
         final JsonNode jsonNode = mapper.readTree(json);
         final ObjectNode finalSchema = mapper.createObjectNode();
-        finalSchema.put("namespace", "com.sgmarghade.test");
-        finalSchema.put(NAME, "outer_record");
+        finalSchema.put("namespace", namespace);
+        finalSchema.put(NAME, recordname);
         finalSchema.put(TYPE, RECORD);
         finalSchema.set(FIELDS, getFields(jsonNode));
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(finalSchema);
@@ -140,6 +141,6 @@ public class AvroConverter {
      * @return random
      */
     private String generateRandomNumber(Map.Entry<String, JsonNode> map) {
-        return (map.getKey() + "_" + new Random().nextInt(100));
+        return map.getKey();
     }
 }
