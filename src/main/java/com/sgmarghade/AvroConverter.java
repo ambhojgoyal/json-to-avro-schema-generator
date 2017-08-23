@@ -32,6 +32,8 @@ public class AvroConverter {
     private static final String RECORD = "record";
     private static final String FIELDS = "fields";
     private static final String BOOLEAN = "boolean";
+    private static final String INTEGER = "int";
+    private static final String FLOAT = "float";
 
     private final ObjectMapper mapper;
 
@@ -76,7 +78,8 @@ public class AvroConverter {
         finalSchema.put(NAME, recordname);
         finalSchema.put(TYPE, RECORD);
         finalSchema.set(FIELDS, getFields(jsonNode));
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(finalSchema);
+        final String final_output = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(finalSchema);
+        return final_output;
     }
 
     /**
@@ -94,7 +97,11 @@ public class AvroConverter {
 
             switch (nextNode.getNodeType()) {
                 case NUMBER:
-                    fields.add(mapper.createObjectNode().put(NAME, map.getKey()).put(TYPE, (nextNode.isLong() ? "long" : "double")));
+                    if (nextNode.isInt()){
+                        fields.add(mapper.createObjectNode().put(NAME, map.getKey()).put(TYPE, INTEGER));
+                    }else {
+                        fields.add(mapper.createObjectNode().put(NAME, map.getKey()).put(TYPE, FLOAT));
+                    }
                     break;
 
                 case STRING:
